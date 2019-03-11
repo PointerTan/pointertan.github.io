@@ -1,0 +1,612 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head><meta name="generator" content="Hexo 3.8.0">
+  
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5">
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1">
+
+
+    <meta name="description" content="吃口屎冷静下">
+
+
+
+  <meta name="keywords" content="travis, 慢, 打包, 发版, 优化,">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="。what a PT day" type="application/atom+xml">
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1">
+
+
+<meta name="description" content="其实之前很早就弄好了travis-ci自动打包和发版的流程，在使用的过程中，因为各种原因，导致travis服务器慢慢的出现error，整个流程的时间也越来越长，慢慢地又变回手工发版了。但如果能健壮自动化的流程，比手工打包还是强很多的。">
+<meta name="keywords" content="travis, 慢, 打包, 发版, 优化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="travis-ci自动打包发版的优化">
+<meta property="og:url" content="http://yoursite.com/2016/05/17/travis-ci自动打包发版的优化/index.html">
+<meta property="og:site_name" content="。what a PT day">
+<meta property="og:description" content="其实之前很早就弄好了travis-ci自动打包和发版的流程，在使用的过程中，因为各种原因，导致travis服务器慢慢的出现error，整个流程的时间也越来越长，慢慢地又变回手工发版了。但如果能健壮自动化的流程，比手工打包还是强很多的。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-03-11T08:49:01.653Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="travis-ci自动打包发版的优化">
+<meta name="twitter:description" content="其实之前很早就弄好了travis-ci自动打包和发版的流程，在使用的过程中，因为各种原因，导致travis服务器慢慢的出现error，整个流程的时间也越来越长，慢慢地又变回手工发版了。但如果能健壮自动化的流程，比手工打包还是强很多的。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> travis-ci自动打包发版的优化 | 。what a PT day </title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">。what a PT day</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br>
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br>
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br>
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              travis-ci自动打包发版的优化
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-05-17T05:18:55+00:00" content="2016-05-17">
+            2016-05-17
+          </time>
+        </span>
+
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>其实之前很早就弄好了travis-ci自动打包和发版的流程，在使用的过程中，因为各种原因，导致travis服务器慢慢的出现error，整个流程的时间也越来越长，慢慢地又变回手工发版了。但如果能健壮自动化的流程，比手工打包还是强很多的。</p>
+<a id="more"></a>
+<h4 id="导致弃用的原因"><a href="#导致弃用的原因" class="headerlink" title="导致弃用的原因"></a>导致弃用的原因</h4><p>原因有好几个，首先是网络访问的问题，因为用到了cocoapods管理第三方库，travis服务器在执行pod install的时候，需要去下载对应的包，因为每个包的源都可以由库作者自己指定，所以有可能会遇到网络访问的问题。</p>
+<p>然后是上传指令的更改，因为上传规则和第三方工具库api的修改，上传testflight的脚本，坏过好几次，烦到我直接就手动发版了。</p>
+<p>还有其他原因，比如因为travis-ci每次都是启动一个全新模拟器，我每次打包都需要从头编译，这。。。花了我很多时间去调试，后来烦了就手动发版好了。</p>
+<h4 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h4><h5 id="1、网络问题，更改下载源"><a href="#1、网络问题，更改下载源" class="headerlink" title="1、网络问题，更改下载源"></a>1、网络问题，更改下载源</h5><p>每一个第三方库其实都对应着一个.podspec.json的文件，文件描述里该库的所有基本信息，这个文件可以在本地安装好cocoapods的~/.cocoapods/repos/master/Specs目录下相应的库里找到，也可以在cocoapods的<a href="https://github.com/CocoaPods/Specs/tree/master/Specs" target="_blank" rel="noopener">github库</a>中找到。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"name"</span>: <span class="string">"AVOSCloud"</span>,</span><br><span class="line">    <span class="attr">"version"</span>: <span class="string">"3.2.8"</span>,</span><br><span class="line">    <span class="attr">"platforms"</span>: &#123;</span><br><span class="line">        <span class="attr">"ios"</span>: <span class="string">"6.0"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"summary"</span>: <span class="string">"LeanCloud iOS SDK for mobile backend."</span>,</span><br><span class="line">    <span class="attr">"homepage"</span>: <span class="string">"https://leancloud.cn"</span>,</span><br><span class="line">    <span class="attr">"documentation_url"</span>: <span class="string">"https://leancloud.cn/api-docs/iOS/index.html"</span>,</span><br><span class="line">    <span class="attr">"license"</span>: &#123;</span><br><span class="line">        <span class="attr">"type"</span>: <span class="string">"Commercial"</span>,</span><br><span class="line">        <span class="attr">"text"</span>: <span class="string">"Copyright 2015 LeanCloud, Inc. See https://leancloud.cn/terms.html"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"authors"</span>: &#123;</span><br><span class="line">        <span class="attr">"LeanCloud"</span>: <span class="string">"support@leancloud.cn"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"source"</span>: &#123;</span><br><span class="line">        <span class="attr">"http"</span>: <span class="string">"https://download.leancloud.cn/sdk/iOS/release-v3.2.8/Static/AVOSCloud.framework.zip"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"source_files"</span>: <span class="string">"*.h"</span>,</span><br><span class="line">    <span class="attr">"public_header_files"</span>: <span class="string">"*.h"</span>,</span><br><span class="line">    <span class="attr">"preserve_paths"</span>: <span class="string">"iOS/release-v3.2.8/Static/AVOSCloud.framework/AVOSCloud"</span>,</span><br><span class="line">    <span class="attr">"vendored_libraries"</span>: <span class="string">"libAVOSCloud.a"</span>,</span><br><span class="line">    <span class="attr">"frameworks"</span>: [</span><br><span class="line">        <span class="string">"CFNetwork"</span>,...</span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">"libraries"</span>: [</span><br><span class="line">        <span class="string">"icucore"</span>,</span><br><span class="line">        <span class="string">"sqlite3"</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">"xcconfig"</span>: &#123;</span><br><span class="line">        <span class="attr">"OTHER_LDFLAGS"</span>: <span class="string">"$(inherited) -ObjC -lz"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"prepare_command"</span>: <span class="string">"cp iOS/release-v3.2.8/Static/AVOSCloud.framework/AVOSCloud libAVOSCloud.a\ncp iOS/release-v3.2.8/Static/AVOSCloud.framework/Headers/* ."</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中的source就是该库的下载地址，文件的其他字段和规则，详细可以查看cocoapods的官方文档，通过改动这个地址，加快travis-ci下载该库的速度，具体步骤就是下载这个地址的东西，然后放在某个文件服务器，再把对应的地址替换掉，我是把包直接托管在github仓库上，为每个库创建一个分支，然后打一个对应版本的tag，通过这个tag就可以拿到对应版本的第三方库了。改完这个文件之后，我们又不是作者，怎么让它生效呢？这时候需要修改项目的podfile文件，<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pod 'AVOSCloud', :podspec =&gt; 'BRPodsHelp/AVOSCloud.podspec.json'</span><br><span class="line">pod 'AVOSCloudIM', :podspec =&gt; 'BRPodsHelp/AVOSCloudIM.podspec.json'</span><br></pre></td></tr></table></figure></p>
+<p>让pod指定到本地podspec.json的地址，而对应的这个本地文件可以跟随仓库一起提交，这样维护起来就方便多了。至此，解决了网络问题。</p>
+<h5 id="2、脚本问题"><a href="#2、脚本问题" class="headerlink" title="2、脚本问题"></a>2、脚本问题</h5><p>顺便把各个步骤用到的脚本简单说下，具体的话，还是要先了解对应工具和命令的用法</p>
+<h6 id="compile"><a href="#compile" class="headerlink" title="compile"></a>compile</h6><p>使用xctool编译出xcachive格式的包，为啥使用xctool，因为它log很有可读性。</p>
+<h6 id="sign签名"><a href="#sign签名" class="headerlink" title="sign签名"></a>sign签名</h6><p>这个命令有点烦，testflight的包，我是用xcodebuild中，带有-exportOptionsPlist选项的命令去完成打包的<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xcodebuild -exportArchive -archivePath "$OUTPUTDIR_BUILD/$APPNAME.xcarchive" -exportPath "$OUTPUTDIR_BUILD" -exportOptionsPlist "scripts/$CONFIG.plist"</span><br></pre></td></tr></table></figure></p>
+<p>而inhouse的包，我是使用<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xcodebuild -exportArchive -archivePath "$OUTPUTDIR_BUILD/$APPNAME.xcarchive" -exportPath "$OUTPUTDIR_BUILD/$APPNAME.ipa" -exportFormat ipa -exportProvisioningProfile "$PROFILE_NAME_INH_REAL_NAME" -configuration "$CONFIG_INHOUSE"</span><br></pre></td></tr></table></figure></p>
+<p>为啥inhouse和testflight的sign命令不同？因为坑爹苹果咯，我尝试了很多次，inhouse只有这样才能打包并且安装成功</p>
+<h6 id="上传脚本"><a href="#上传脚本" class="headerlink" title="上传脚本"></a>上传脚本</h6><p>第三方：选择不同的分发平台，就有不同的上传脚本，这块还是参照你所选用的分发分发平台吧。<br>testflight：fastlane的credentials、pilot， 都是fastlane家的东西，github一下就有了，前者用来授权后者用来上传</p>
+<p>自此，之前弃用travis的两个问题都解决了。</p>
+<h4 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h4><p>完成上面的东西，整个流程应该就能跑通了，但是，我总不能打个tag就编译和签名app-store版本和inhouse版本，并且还分发到第三方平台和testflight吧，整个过程起码1个多小时，而且不能按需打包总是很怪。所以我就把按需的需求，放在了tag上面</p>
+<h5 id="tag支持按需打包"><a href="#tag支持按需打包" class="headerlink" title="tag支持按需打包"></a>tag支持按需打包</h5><p>这是什么鬼，其实就是判断tag是要打inhouse包，还是打testflight包咯，因为travis-ci可以拿到当前的tag，所以还是有可行性的。最后我选用-pgy和-testflight，分别表示上传到蒲公英和testflight，打tag的时候，比如1.0.1build1-pgy，这样就表示要上传蒲公英了。脚本如下：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">STRING_A="$TRAVIS_TAG"</span><br><span class="line">STRING_B="$PGY_TAG"</span><br><span class="line">STRING_C="$TEST_FLIGHT_TAG"</span><br><span class="line">if [[ $&#123;STRING_A/$&#123;STRING_B&#125;//&#125; == $STRING_A ]]</span><br><span class="line">then</span><br><span class="line">    if [[ $&#123;STRING_A/$&#123;STRING_C&#125;//&#125; == $STRING_A ]]</span><br><span class="line">    then</span><br><span class="line">        exit 0</span><br><span class="line">    else</span><br><span class="line">        /#这里是testflight</span><br><span class="line">    fi</span><br><span class="line">else</span><br><span class="line">    /#这里是pgy</span><br><span class="line">fi</span><br></pre></td></tr></table></figure></p>
+<p>if语句的原理就是stringA去掉stringB之后，是否等于stringA，等于的话，说明不包含这个命令，不等于的话，就说明包含咯。以此实现按需编译打包上传发版的需求。</p>
+<h5 id="自动打tag"><a href="#自动打tag" class="headerlink" title="自动打tag"></a>自动打tag</h5><p>启动一个定时任务去自动打包并发版，这样就能有效率的迭代和测试。定时任务我用的是leancloud的后台云函数，支持Cron表达式的定时任务，语言用的是js，具体就是node.js。用node.js的<a href="https://github.com/request/request" target="_blank" rel="noopener">require</a>模块去调用<a href="https://developer.github.com/v3/repos/releases/#create-a-release" target="_blank" rel="noopener">github release api</a>，具体用法：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> request = <span class="built_in">require</span>(<span class="string">"request"</span>);</span><br><span class="line"><span class="keyword">var</span> options = &#123;</span><br><span class="line">    method: <span class="string">'POST'</span>,</span><br><span class="line">    url: <span class="string">'https://api.github.com/repos/beautifulreading/rio-ios/releases'</span>,</span><br><span class="line">    headers: &#123; </span><br><span class="line">        <span class="string">'cache-control'</span>: <span class="string">'no-cache'</span>,</span><br><span class="line">        <span class="string">'content-type'</span>: <span class="string">'application/json'</span>,</span><br><span class="line">        <span class="string">'user-agent'</span>: <span class="string">'node.js'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    body: &#123;   </span><br><span class="line">        tag_name: <span class="string">"name"</span>,</span><br><span class="line">        target_commitish: <span class="string">'develop'</span>,</span><br><span class="line">        name: <span class="string">"name"</span>,</span><br><span class="line">        body: <span class="string">"name"</span>,</span><br><span class="line">        draft: <span class="literal">false</span>,</span><br><span class="line">        prerelease: <span class="literal">false</span> </span><br><span class="line">    &#125;,</span><br><span class="line">    json: <span class="literal">true</span> </span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">request(options, <span class="function"><span class="keyword">function</span> (<span class="params">error, res, body</span>) </span>&#123;</span><br><span class="line"><span class="keyword">if</span> (error) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(error);</span><br><span class="line">    <span class="built_in">console</span>.log(body);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>记得在headers加上认证信息， 这样每天早上6点发一个inhouse，每周发两个testflight，有点爽，不要问为啥要早上6点发，因为5点的时候程序猿还没睡觉。</p>
+<h5 id="上传dsym文件"><a href="#上传dsym文件" class="headerlink" title="上传dsym文件"></a>上传dsym文件</h5><p>之前做的上传流程，只管上传包，却没有管dsym文件，这样要分析错误还要回头去找个tag，然后重新打包再拿出来，烦到。。。崩溃监控我们现在用的是腾讯的bugly，好处就是他只需要上传几m的dsym包，当然这个包是经过bugly的脚本处理过的，比起平时几十m，还是很有优势的。而他的处理脚本，也都被我放进仓库里，直接打包后处理。  本来是想travis直接上传到bugly对应版本的，但是bugly的api有点烦，需要的参数太多，以至于很难自动化，所以我就直接把这个处理过的dsym文件上传到github对应的release tag上，在tarvis的yml文件加上：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  provider: releases</span><br><span class="line">  api-key: "key"</span><br><span class="line">  file:</span><br><span class="line">    - "$PWD/buglydsym.zip"</span><br><span class="line">    - "$OUTPUTDIR_BUILD/$APPNAME.ipa"</span><br><span class="line">  skip_cleanup: true</span><br><span class="line">  on:</span><br><span class="line">    tags: true</span><br><span class="line">    all_branches: true</span><br></pre></td></tr></table></figure></p>
+<p>注意yml文件是区分缩进的，这样要分析bug的时候，就从对应tag下载这个文件，然后手动传到bugly。在这里我顺便把ipa包也传上github，也好做个备份吧。</p>
+<h5 id="travis命令支持"><a href="#travis命令支持" class="headerlink" title="travis命令支持"></a>travis命令支持</h5><p>除了以上这些之外，我们还可以用travis-ci支持的指令去使保证整个过程更加顺利，比如retry，在yml的命令后面加上 -retry=3，这样在命令失败的情况下，travis会重新执行，3代表次数。具体还是看文档吧，还有其他可选项来保证整个流程的执行。 不过有时，自动化还是会失败的😂，毕竟是机器，x因素又比较多。</p>
+<p>好吧，travis的优化大概就结束了，接下来要继续完善持续集成，让项目的迭代和质量更好咯。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/travis-慢-打包-发版-优化/" rel="tag">#travis, 慢, 打包, 发版, 优化</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/24/七月上/" rel="prev">七月上</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/17/感受真正的热爱/" rel="next">感受真正的热爱</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="PT" itemprop="image">
+          <p class="site-author-name" itemprop="name">PT</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">吃口屎冷静下</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/">
+              <span class="site-state-item-count">14</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">1</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#导致弃用的原因"><span class="nav-number">1.</span> <span class="nav-text">导致弃用的原因</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#解决问题"><span class="nav-number">2.</span> <span class="nav-text">解决问题</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1、网络问题，更改下载源"><span class="nav-number">2.1.</span> <span class="nav-text">1、网络问题，更改下载源</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2、脚本问题"><span class="nav-number">2.2.</span> <span class="nav-text">2、脚本问题</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#compile"><span class="nav-number">2.2.1.</span> <span class="nav-text">compile</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#sign签名"><span class="nav-number">2.2.2.</span> <span class="nav-text">sign签名</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#上传脚本"><span class="nav-number">2.2.3.</span> <span class="nav-text">上传脚本</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#优化"><span class="nav-number">3.</span> <span class="nav-text">优化</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#tag支持按需打包"><span class="nav-number">3.1.</span> <span class="nav-text">tag支持按需打包</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#自动打tag"><span class="nav-number">3.2.</span> <span class="nav-text">自动打tag</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#上传dsym文件"><span class="nav-number">3.3.</span> <span class="nav-text">上传dsym文件</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#travis命令支持"><span class="nav-number">3.4.</span> <span class="nav-text">travis命令支持</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright">
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">PT</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

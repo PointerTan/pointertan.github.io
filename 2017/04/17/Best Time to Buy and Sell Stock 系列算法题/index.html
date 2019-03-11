@@ -1,0 +1,629 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head><meta name="generator" content="Hexo 3.8.0">
+  
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5">
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1">
+
+
+    <meta name="description" content="吃口屎冷静下">
+
+
+
+  <meta name="keywords" content="算法, LeetCode, swift, 动态规划,">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="。what a PT day" type="application/atom+xml">
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1">
+
+
+<meta name="description" content="这是最近在学算法中完成的第一个系列题，系列题的特点是后一道是前一道的升级版，后一道比前一道难，基本是一道比一道有意思，所以写一下总结是必须的呀。那为啥要重新学算法，大概是因为之前学得水吧。其实最近的计划是保持进阶学习的同时，不断地巩固基础，不断地进行精深练习。然后刚好遇到一个大神主播最近在讲算法，那就跟着学吧。">
+<meta name="keywords" content="算法, LeetCode, swift, 动态规划">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Best Time to Buy and Sell Stock 系列算法题">
+<meta property="og:url" content="http://yoursite.com/2017/04/17/Best Time to Buy and Sell Stock 系列算法题/index.html">
+<meta property="og:site_name" content="。what a PT day">
+<meta property="og:description" content="这是最近在学算法中完成的第一个系列题，系列题的特点是后一道是前一道的升级版，后一道比前一道难，基本是一道比一道有意思，所以写一下总结是必须的呀。那为啥要重新学算法，大概是因为之前学得水吧。其实最近的计划是保持进阶学习的同时，不断地巩固基础，不断地进行精深练习。然后刚好遇到一个大神主播最近在讲算法，那就跟着学吧。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-03-11T08:49:01.653Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Best Time to Buy and Sell Stock 系列算法题">
+<meta name="twitter:description" content="这是最近在学算法中完成的第一个系列题，系列题的特点是后一道是前一道的升级版，后一道比前一道难，基本是一道比一道有意思，所以写一下总结是必须的呀。那为啥要重新学算法，大概是因为之前学得水吧。其实最近的计划是保持进阶学习的同时，不断地巩固基础，不断地进行精深练习。然后刚好遇到一个大神主播最近在讲算法，那就跟着学吧。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> Best Time to Buy and Sell Stock 系列算法题 | 。what a PT day </title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">。what a PT day</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br>
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br>
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br>
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              Best Time to Buy and Sell Stock 系列算法题
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-04-17T15:04:03+00:00" content="2017-04-17">
+            2017-04-17
+          </time>
+        </span>
+
+        
+          <span class="post-category">
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope="" itemtype="https://schema.org/Thing">
+                <a href="/categories/algorithm/" itemprop="url" rel="index">
+                  <span itemprop="name">algorithm</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>这是最近在学算法中完成的第一个系列题，系列题的特点是后一道是前一道的升级版，后一道比前一道难，基本是一道比一道有意思，所以写一下总结是必须的呀。那为啥要重新学算法，大概是因为之前学得水吧。其实最近的计划是保持进阶学习的同时，不断地巩固基础，不断地进行精深练习。然后刚好遇到一个大神主播最近在讲算法，那就跟着学吧。</p>
+<a id="more"></a>
+<p>好了，今天的主角是LeetCode上的这几道题：<br>121    Best Time to Buy and Sell Stock<br>122    Best Time to Buy and Sell Stock II<br>123    Best Time to Buy and Sell Stock III<br>188    Best Time to Buy and Sell Stock IV<br>309    Best Time to Buy and Sell Stock with Cooldown   </p>
+<p>其实主角是应该是动态规划，这类最佳xx的题目，一看就先想到动态规划。每一道题大概我都会写下我当时的思路，和怎么不通过，怎么改进，怎么优化。</p>
+<h4 id="121-Best-Time-to-Buy-and-Sell-Stock"><a href="#121-Best-Time-to-Buy-and-Sell-Stock" class="headerlink" title="121 Best Time to Buy and Sell Stock"></a>121 Best Time to Buy and Sell Stock</h4><p><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock/#/description" target="_blank" rel="noopener">原题地址</a>。题目的意思大概是，给你一个股票的每天价格数组prices，你在只能进行一次操作（即一次买入和一次卖出）的限制下，求最大的收益。比如每天的价格为[7, 1, 5, 3, 6, 4]，那么最大收益就是1的时候买入，6的时候卖出，这样就能得到最大收益5。</p>
+<p>第一步，明确下边界，当输入为空数组时，那最大收益就是0。而每天的价格，肯定是正数。</p>
+<p>第二步，考虑不同的解决方案，这道题，用动态规划肯定是可以解的，然后其他方案，我也想不出来。<br>动态规划，先定义个dp[i]来表示第i天的最大收益，<br>dp[i] = prices[i] - prices[j]第j天买入的价格，因为交易只能有一次，所以，当买入卖出完成后，就能缓存当前结果了。<br>用swift来写的话，大概的递推过程如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> maxIncome = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span> ..&lt; prices.count &#123;</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="number">0</span> ..&lt; i &#123;</span><br><span class="line">        <span class="keyword">if</span> prices[i] - prices[j] &gt; maxIncome &#123;</span><br><span class="line">            maxIncome = prices[i] - prices[j]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> maxIncome</span><br></pre></td></tr></table></figure></p>
+<p>这样就能算出最大的收益了，不过如果把这段代码方式LeetCode上跑，结果是超时的。为啥呢？<br>额，在解释前，我说个LeetCode傻逼的地方，因为swift比较新吧，然后版本更迭又挺频繁的，所以swift的代码，LeetCode上很难保证其运行时间，比如说在同样时间复杂度的解题方案下，用JavaScript写的能过，用swift的不能过，额，真是坑爹。我被这个坑了几个小时，害我不断地优化代码，所以，虽然我是用swift来解题，但是有时候，我是用js复写了一遍swift的代码然后来提交的。<br>好了，上面这个解法为啥超时呢。。。根据经验，应该是重复计算的问题，但其实这里并没有重复计算，而是计算了很多本不需要计算的结果。第二个循环其实很多计算是不必要的，因为，我们要得出当前差值最大，那肯定是减去在i之前最小的值，而不需要去减i之前的每个数<br>所以，优化后，代码如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> maxIncome = <span class="number">0</span></span><br><span class="line"><span class="keyword">var</span> minValue = Int.max</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span> ..&lt; prices.count &#123;</span><br><span class="line">    <span class="keyword">if</span> prices[i] &lt; minValue &#123;</span><br><span class="line">        minValue = prices[i]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> i &gt; <span class="number">0</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> prices[i] - minValue &gt; maxIncome &#123;</span><br><span class="line">            maxIncome = prices[i] - minValue</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> maxIncome</span><br></pre></td></tr></table></figure></p>
+<p>上面的两个方案，从复杂度来看，一个是O(n^2)，一个是O(n)，然后提交，accepted!!! </p>
+<p>第三步，优化代码<br>其实这一步在第二步已经进行过一次了，即复杂度的优化，接下来就是一些小的优化，和代码风格的优化。<br>1、minValue的初始值可以为第一天的价格<br>2、在递推过程中，可以从第2天的开始，即i=1的时候。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> maxIncome = <span class="number">0</span></span><br><span class="line"><span class="keyword">var</span> minValue = prices[i]</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">1</span> ..&lt; prices.count &#123;</span><br><span class="line">    <span class="keyword">if</span> prices[i] &lt; minValue &#123;</span><br><span class="line">        minValue = prices[i]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> prices[i] - minValue &gt; maxIncome &#123;</span><br><span class="line">        maxIncome = prices[i] - minValue</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> maxIncome</span><br></pre></td></tr></table></figure></p>
+<p>上面的代码可以用三目运算符继续缩减行数的，不过，我觉得这样已经差不多了。ps，上面3段代码都是重新手打的，不保证通过啊。</p>
+<h4 id="122-Best-Time-to-Buy-and-Sell-Stock-II"><a href="#122-Best-Time-to-Buy-and-Sell-Stock-II" class="headerlink" title="122 Best Time to Buy and Sell Stock II"></a>122 Best Time to Buy and Sell Stock II</h4><p><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/#/description" target="_blank" rel="noopener">原题地址</a>。这道题是在上题的基础上，然后不限制交易次数，但是每次交易不能同时进行，即买入后要卖出才能进行下一次买入的操作。<br>第一道题已经把基本的、通用的结果步骤写出来了，我解题的时候大概也是遵循这样的步骤来解，所以第二题就不详细啰嗦的写了。<br>动态规划的第一步是给出状态的定义，在这道题中<br>我们这样来定义最大收益dp：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dp[i][<span class="number">0</span>]，dp[i][<span class="number">1</span>]代表 the i day, have or not stock，即第i天是否拥有股票哟，<span class="number">0</span>代表没有，<span class="number">1</span>代表当天持有股票。</span><br></pre></td></tr></table></figure></p>
+<p>第二步是给出状态递推方程<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dp[i][<span class="number">0</span>] = max(dp[i - <span class="number">1</span>][<span class="number">0</span>], dp[i - <span class="number">1</span>][<span class="number">1</span>] + prices[i])  </span><br><span class="line"><span class="comment">//即第i天没股票的最大收益，dp[i-1][0]代表前一天没有股票，dp[i-1][1]+prices[i]前一天有股票并卖出，而第i天的最大收益会是这两者之间的最大值。</span></span><br><span class="line">dp[i][<span class="number">1</span>] = max(dp[i - <span class="number">1</span>][<span class="number">0</span>] - prices[i], dp[i - <span class="number">1</span>][<span class="number">1</span>])  </span><br><span class="line"><span class="comment">//即第i天持有股票时的最大收益，dp[i-1][0]-prices[i]代表前一天没有股票并买入，dp[i-1][1]表示前一天持有股票的最大收益</span></span><br></pre></td></tr></table></figure></p>
+<p>有了上面的递推方程，即dp[prices.count-1][0]，最后一天没有股票，就是当前的最大收益了。</p>
+<p>其实这里可能大家会有疑惑，为啥dp要是二维数组，为什么一个为天数，一个为是否持股。额，其实，动态规划就是把每个因素转化为一个维度，这是标准的动态规划递推方程，每当有不同的决定因素时，往往可以通过增加维度来解题。但是增加维度的方式有多种，一位数组变成二维数组是一个方法，而增加不同的变量也是可以达到增加维度的效果的，如这里，你可以定义，s0[i],s1[i]分别为第i天没持股，和持股的最大收益。这样就不需要二维数组啦，但是方法的本质是一样。</p>
+<p>代码如下（swift）：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">func maxProfit(_ prices: [Int]) -&gt; Int &#123;</span><br><span class="line">    <span class="keyword">if</span> prices.count &lt;= <span class="number">1</span> &#123; <span class="keyword">return</span> <span class="number">0</span> &#125;</span><br><span class="line">    <span class="keyword">var</span> dp: [[Int]] = <span class="built_in">Array</span>(repeating: [<span class="number">0</span>, <span class="number">0</span>], <span class="attr">count</span>: prices.count)</span><br><span class="line">    dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">0</span></span><br><span class="line">    dp[<span class="number">0</span>][<span class="number">1</span>] = -prices[<span class="number">0</span>]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">1</span> ..&lt; prices.count  &#123;</span><br><span class="line">        dp[i][<span class="number">0</span>] = max(dp[i - <span class="number">1</span>][<span class="number">0</span>], dp[i - <span class="number">1</span>][<span class="number">1</span>] + prices[i])</span><br><span class="line">        dp[i][<span class="number">1</span>] = max(dp[i - <span class="number">1</span>][<span class="number">0</span>] - prices[i], dp[i - <span class="number">1</span>][<span class="number">1</span>])</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> dp[prices.count - <span class="number">1</span>][<span class="number">0</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这道题还有个神奇的解法，不过跟动态规划没啥关系，我是看着别人代码写出来的😂，自行理解吧：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">func maxProfit(_ prices: [Int]) -&gt; Int&#123;</span><br><span class="line">    <span class="keyword">var</span> max = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">1</span> ..&lt; prices.count &#123;</span><br><span class="line">        <span class="keyword">if</span> prices[i] &gt; prices[i - <span class="number">1</span>] &#123;</span><br><span class="line">            max += prices[i] - prices[i - <span class="number">1</span>]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> max</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="Best-Time-to-Buy-and-Sell-Stock-III-和-IV"><a href="#Best-Time-to-Buy-and-Sell-Stock-III-和-IV" class="headerlink" title="Best Time to Buy and Sell Stock III 和 IV"></a>Best Time to Buy and Sell Stock III 和 IV</h4><p><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/#/description" target="_blank" rel="noopener">原题III</a><br><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/#/description" target="_blank" rel="noopener">原题IV</a></p>
+<p>第三题是限制次数两次，第四题是限制交易次数k次，在解第三题的时候，可以用一些方式，达到不增加维度的方式来解题，具体参照LeetCode讨论区里面的解法吧。而第四题是比第三题更加具有普遍性，上面说过，如果有新的决定因素，我们可以将它作为一个新的维度。即：<br>//dp[i][j][0]  dp[i][j][1]   the i day, have j transactions,  have or not stock<br>//dp[i][j][0] = max(dp[i - 1][j][0], dp[i - 1][j - 1][1] + prices[i])<br>//dp[i][j][1] = max(dp[i - 1][j][0] - prices[i], dp[i - 1][j][1])<br>第一行是状态定义，跟之前的定义类似，但是增加了一个维度，即第i天已经有j次交易是否持股的最大收益。<br>第二、第三行是状态转移方程，首先，买入股票并没有完成一次操作，而是在卖出之后，才会增加交易次数。所以能得出上面的两个方程。<br>代码如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">func maxProfit(_ k: Int, _ prices: [Int]) -&gt; Int &#123;</span><br><span class="line">    <span class="keyword">if</span> prices.count &lt;= <span class="number">1</span> &#123; <span class="keyword">return</span> <span class="number">0</span> &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> dp: [[[Int]]] = <span class="built_in">Array</span>(repeating: <span class="built_in">Array</span>(repeating: [Int.min, Int.min], <span class="attr">count</span>: k + <span class="number">1</span>), <span class="attr">count</span>: prices.count)</span><br><span class="line">    dp[<span class="number">0</span>][<span class="number">0</span>][<span class="number">0</span>] = <span class="number">0</span></span><br><span class="line">    dp[<span class="number">0</span>][<span class="number">0</span>][<span class="number">1</span>] = -prices[<span class="number">0</span>]</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> maxIncome = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span> ..&lt; prices.count  &#123;</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="number">0</span> ... k &#123;</span><br><span class="line">            <span class="keyword">if</span> i &gt; <span class="number">0</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> j &gt; <span class="number">0</span> &#123;</span><br><span class="line">                    dp[i][j][<span class="number">0</span>] = max(dp[i - <span class="number">1</span>][j][<span class="number">0</span>], dp[i - <span class="number">1</span>][j - <span class="number">1</span>][<span class="number">1</span>] + prices[i])</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    dp[i][j][<span class="number">0</span>] = <span class="number">0</span></span><br><span class="line">                &#125;</span><br><span class="line">                dp[i][j][<span class="number">1</span>] = max(dp[i - <span class="number">1</span>][j][<span class="number">0</span>] - prices[i], dp[i - <span class="number">1</span>][j][<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">                maxIncome = max(maxIncome, dp[i][j][<span class="number">0</span>])</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> maxIncome</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>maxIncome用来缓存j次交易后的最大收益，最后就是最大收益。上面的代码其实是不能通过, 但是这并不是重点。上面的代码大概就代表了整个解题的思路和递推过程。</p>
+<p>假如理解了上面的代码，再来理解下面完整的代码，其实整体没啥变化，加了一些优化而已：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">func maxProfit(_ k: Int, _ prices: [Int]) -&gt; Int &#123;</span><br><span class="line">    <span class="keyword">if</span> prices.count &lt;= <span class="number">1</span> &#123; <span class="keyword">return</span> <span class="number">0</span> &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> k &gt; prices.count / <span class="number">2</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> maxIncomeK(prices)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> dp: [[[Int]]] = <span class="built_in">Array</span>(repeating: <span class="built_in">Array</span>(repeating: [Int.min, Int.min], <span class="attr">count</span>: k + <span class="number">1</span>), <span class="attr">count</span>: <span class="number">2</span>)</span><br><span class="line">    dp[<span class="number">0</span>][<span class="number">0</span>][<span class="number">0</span>] = <span class="number">0</span></span><br><span class="line">    dp[<span class="number">0</span>][<span class="number">0</span>][<span class="number">1</span>] = -prices[<span class="number">0</span>]</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> maxIncome = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">1</span> ..&lt; prices.count  &#123;</span><br><span class="line">        <span class="keyword">let</span> x = i % <span class="number">2</span></span><br><span class="line">        <span class="keyword">let</span> y = (i - <span class="number">1</span>) % <span class="number">2</span></span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="number">0</span> ... k &#123;</span><br><span class="line">            <span class="keyword">if</span> j &gt; <span class="number">0</span> &#123;</span><br><span class="line">                dp[x][j][<span class="number">0</span>] = max(dp[y][j][<span class="number">0</span>], dp[y][j - <span class="number">1</span>][<span class="number">1</span>] + prices[i])</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                dp[x][j][<span class="number">0</span>] = <span class="number">0</span></span><br><span class="line">            &#125;</span><br><span class="line">            dp[x][j][<span class="number">1</span>] = max(dp[y][j][<span class="number">0</span>], dp[y][j][<span class="number">1</span>] + prices[i]) - prices[i] <span class="comment">//避免Int.min减去某个数，导致的溢出崩溃。</span></span><br><span class="line">            maxIncome = max(maxIncome, dp[x][j][<span class="number">0</span>])</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> maxIncome</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func maxIncomeK(_ prices: [Int]) -&gt; Int&#123;</span><br><span class="line">    <span class="keyword">var</span> max = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">1</span> ..&lt; prices.count &#123;</span><br><span class="line">        <span class="keyword">if</span> prices[i] &gt; prices[i - <span class="number">1</span>] &#123;</span><br><span class="line">            max += prices[i] - prices[i - <span class="number">1</span>]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> max</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面的代码变量名、方法名有些不是起得很合理，词穷啊，想名字好难。上面的代码对比之前的方案，差别在于：<br>1、当k &gt; prices.count / 2，这个时候就变回第二题了，这里的maxIncomK是第二题中那个神奇的解法。<br>其实完成上面这步处理，这道题就算完了，但是还有优化的地方，这里不能理解就略过吧，不过连我都能理解，应该没啥难度<br>2、状态压缩：var dp在定义的时候，第一维度只用来2个空间大小，而let x = i % 2和let y = (i - 1) % 2则是配套使用，额，其实本质是因为maxIncome用来缓存了当前的最大收益，所以这里可以不用那么多空间来存储，只需要用到这次跟上一次，这两个存储空间就够用了，这里属于空间复杂度的优化。<br>3、在递推过程里面，dp[x][j][1]的方程是不是有点奇怪，其实这是为了解决swift中Int.min减去某个数，导致的溢出崩溃。因为我们初始化的时候把每个值都初始化为Int.min。<br>好像没其他了，这道题就这样吧。</p>
+<h4 id="309-Best-Time-to-Buy-and-Sell-Stock-with-Cooldown"><a href="#309-Best-Time-to-Buy-and-Sell-Stock-with-Cooldown" class="headerlink" title="309 Best Time to Buy and Sell Stock with Cooldown"></a>309 Best Time to Buy and Sell Stock with Cooldown</h4><p>这里每次交易完成后，必须冷静下，即至少暂停一天的操作，不能买不能卖，冷静一天都才有所决策。<br>这道题其实难度比3、4小，如果3、4都理解了，那么这道题就不难理解了。<br>下面给出我的解题方案（js）：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @param &#123;number[]&#125; prices</span></span><br><span class="line"><span class="comment"> * @return &#123;number&#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">var</span> maxProfit = <span class="function"><span class="keyword">function</span>(<span class="params">prices</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (prices.length &lt;= <span class="number">1</span>) <span class="keyword">return</span> <span class="number">0</span> </span><br><span class="line">    <span class="keyword">var</span> dp = []</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; prices.length; i++) &#123;</span><br><span class="line">        dp[i] = []</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">0</span></span><br><span class="line">    dp[<span class="number">0</span>][<span class="number">1</span>] = -prices[<span class="number">0</span>]</span><br><span class="line">    dp[<span class="number">0</span>][<span class="number">2</span>] = <span class="built_in">Number</span>.MIN_VALUE</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt; prices.length; i++)  &#123;</span><br><span class="line">        dp[i][<span class="number">0</span>] = <span class="built_in">Math</span>.max(dp[i - <span class="number">1</span>][<span class="number">0</span>], dp[i - <span class="number">1</span>][<span class="number">2</span>])</span><br><span class="line">        dp[i][<span class="number">1</span>] = <span class="built_in">Math</span>.max(dp[i - <span class="number">1</span>][<span class="number">0</span>] - prices[i], dp[i - <span class="number">1</span>][<span class="number">1</span>])</span><br><span class="line">        dp[i][<span class="number">2</span>] = <span class="built_in">Math</span>.max(dp[i - <span class="number">1</span>][<span class="number">0</span>], dp[i - <span class="number">1</span>][<span class="number">1</span>] + prices[i])</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Math</span>.max(dp[prices.length - <span class="number">1</span>][<span class="number">0</span>], dp[prices.length - <span class="number">1</span>][<span class="number">2</span>])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>为啥我用了js来写，因为就是最前面说的LeetCode上swift抽风的问题。<br>dp[i][0] 表示第i天没有持股的最大收益<br>dp[i][1] 表示第i天有持股的最大收益<br>dp[i][2] 表示第i天没有持股，并且刚刚卖出了股票，如果是这个状态，那接下来就要冷静啦。即不能马上持股。</p>
+<h4 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h4><p>这几道题目在写完之后确实收获不小，建议大家都亲手写一遍吖。</p>
+<p>有人说算法没什么鸟蛋用，额，其实，写算法跟写业务差不多，好像这句我说过啊。<br>按我目前的理解，算法是进行精深练习的一个比较方便快捷的途径，不过也是比较原始的。但这能不断强化一些基本的代码能力，思考和抽象的能力吧。而且算法作为计算机的基础课程，对以后进阶有很大帮助吖。<br>上面这段我乱说的，大家自行理解吧。</p>
+<p>还有一个，说到动态规划，我之前二话不说就是一个递归。但其实动态规划更应该用递推而不是递归。<br>所以以后看到动态规划的题，还是用递推吧。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/算法-LeetCode-swift-动态规划/" rel="tag">#算法, LeetCode, swift, 动态规划</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/24/吹水牛顿迭代法/" rel="prev">吹水牛顿迭代法</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/15/使用reduce实现map和filter/" rel="next">使用reduce实现map和filter</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="PT" itemprop="image">
+          <p class="site-author-name" itemprop="name">PT</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">吃口屎冷静下</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/">
+              <span class="site-state-item-count">14</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">1</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#121-Best-Time-to-Buy-and-Sell-Stock"><span class="nav-number">1.</span> <span class="nav-text">121 Best Time to Buy and Sell Stock</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#122-Best-Time-to-Buy-and-Sell-Stock-II"><span class="nav-number">2.</span> <span class="nav-text">122 Best Time to Buy and Sell Stock II</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Best-Time-to-Buy-and-Sell-Stock-III-和-IV"><span class="nav-number">3.</span> <span class="nav-text">Best Time to Buy and Sell Stock III 和 IV</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#309-Best-Time-to-Buy-and-Sell-Stock-with-Cooldown"><span class="nav-number">4.</span> <span class="nav-text">309 Best Time to Buy and Sell Stock with Cooldown</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#写在最后"><span class="nav-number">5.</span> <span class="nav-text">写在最后</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright">
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">PT</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
